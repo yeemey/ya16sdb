@@ -40,12 +40,20 @@ def blast_db(env, sequence_file, output_base):
     '''
     Create a blast database and file md5sum
     '''
+
+    seqmap = env.Command(
+        target='$out/seqmap.txt',
+        source=seq_info,
+        action='seqmap.py --out $TARGET $SOURCE')
+
     extensions = ['.nhr', '.nin', '.nsq']
     blast_out = env.Command(
         target=[output_base + ext for ext in extensions],
-        source=sequence_file,
+        source=[sequence_file, seqmap],
         action='makeblastdb -dbtype nucl '
-               '-in $SOURCE -out ' + output_base)
+               '-in ${SOURCES[0]} -out ' + output_base
+               '-parse_seqids '
+               '-taxid_map ${SOURCES[1]}')
     env.Command(
         target=output_base,
         source=blast_out,
