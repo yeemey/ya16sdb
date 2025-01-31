@@ -51,7 +51,7 @@ def blast_db(env, sequence_file, output_base):
         target=[output_base + ext for ext in extensions],
         source=[sequence_file, seqmap],
         action='makeblastdb -dbtype nucl '
-               '-in ${SOURCES[0]} -out ' + output_base
+               '-in ${SOURCES[0]} -out ' + output_base +
                '-parse_seqids '
                '-taxid_map ${SOURCES[1]}')
     env.Command(
